@@ -3,7 +3,7 @@ package com.sbnl.headachetracker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -30,7 +30,7 @@ fun WhenDidTheHeadacheStartQuestion(viewModel: HeadacheQuestionnaireViewModel) {
             .padding(start = 32.dp, end = 32.dp, top = 48.dp, bottom = 16.dp)
     ) {
         LazyColumn(Modifier.weight(1f)) {
-            item { Text(text = "When did the headache start?", style = Typography.h5) }
+            item { Text(text = "When did the headache start?", style = Typography.h5, color = MaterialTheme.colors.onPrimary) }
             item { VerticalSpacer(height = 32.dp) }
             item {
                 RadioAnswer(
@@ -78,7 +78,7 @@ fun RadioAnswer(selected: Boolean, answerText: String, onAnswerClicked: () -> Un
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(selected = selected, onClick = onAnswerClicked)
-        Text(text = answerText, style = Typography.subtitle1)
+        Text(text = answerText, style = Typography.subtitle1, color = MaterialTheme.colors.onPrimary)
     }
 }
 

@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.HeadacheTracker" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:statusBarColor">@color/eerie_black</item>
     </style>
 </resources>
