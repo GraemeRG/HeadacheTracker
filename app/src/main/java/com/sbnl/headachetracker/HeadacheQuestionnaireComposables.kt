@@ -13,42 +13,58 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.sbnl.headachetracker.database.HeadacheStartPeriod.*
 import com.sbnl.headachetracker.ui.theme.Typography
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun HeadacheQuestionnaire(viewModel: HeadacheQuestionnaireViewModel = HeadacheQuestionnaireViewModel()) {
+fun HeadacheQuestionnaire(returnToHomeScreen: () -> Unit, viewModel: HeadacheQuestionnaireViewModel = getViewModel()) {
+    val shouldReturnToHomeScreen = viewModel.returnToHomeScreen.value
+
+    if (shouldReturnToHomeScreen != null) {
+        if(shouldReturnToHomeScreen >= 0) {
+            returnToHomeScreen()
+        }
+    }
+
     WhenDidTheHeadacheStartQuestion(viewModel)
 }
 
 @Composable
 fun WhenDidTheHeadacheStartQuestion(viewModel: HeadacheQuestionnaireViewModel) {
 
-    val answerState = viewModel.answerToQuestion
+    val answerState = viewModel.headacheStartPeriod
 
     Column(
         modifier = Modifier
             .padding(start = 32.dp, end = 32.dp, top = 48.dp, bottom = 16.dp)
     ) {
         LazyColumn(Modifier.weight(1f)) {
-            item { Text(text = "When did the headache start?", style = Typography.h5, color = MaterialTheme.colors.onPrimary) }
+            item {
+                Text(
+                    text = "When did the headache start?",
+                    style = Typography.h5,
+                    color = MaterialTheme.colors.onPrimary
+                )
+            }
             item { VerticalSpacer(height = 32.dp) }
             item {
                 RadioAnswer(
-                    selected = answerState.value == 1,
+                    selected = answerState.value == WOKE_UP,
                     answerText = "Woke up with it"
-                ) { viewModel.onAnswerUpdated(1) }
+                ) { viewModel.onAnswerUpdated(WOKE_UP) }
             }
             item {
                 RadioAnswer(
-                    selected = answerState.value == 2,
+                    selected = answerState.value == DURING_DAY,
                     answerText = "During the day"
-                ) { viewModel.onAnswerUpdated(2) }
+                ) { viewModel.onAnswerUpdated(DURING_DAY) }
             }
             item {
                 RadioAnswer(
-                    selected = answerState.value == 3,
+                    selected = answerState.value == DURING_EVENING,
                     answerText = "In the evening"
-                ) { viewModel.onAnswerUpdated(3) }
+                ) { viewModel.onAnswerUpdated(DURING_EVENING) }
             }
         }
         Button(
@@ -78,12 +94,16 @@ fun RadioAnswer(selected: Boolean, answerText: String, onAnswerClicked: () -> Un
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(selected = selected, onClick = onAnswerClicked)
-        Text(text = answerText, style = Typography.subtitle1, color = MaterialTheme.colors.onPrimary)
+        Text(
+            text = answerText,
+            style = Typography.subtitle1,
+            color = MaterialTheme.colors.onPrimary
+        )
     }
 }
 
 @Preview
 @Composable
-fun HeadacheQuestionairePreview() {
-    HeadacheQuestionnaire()
+fun HeadacheQuestionnairePreview() {
+    HeadacheQuestionnaire({})
 }

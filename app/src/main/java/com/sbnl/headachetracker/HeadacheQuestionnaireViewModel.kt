@@ -1,21 +1,41 @@
 package com.sbnl.headachetracker
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sbnl.headachetracker.database.HeadacheStartPeriod
+import com.sbnl.headachetracker.repositories.HeadacheRepository
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
-class HeadacheQuestionnaireViewModel: ViewModel() {
+class HeadacheQuestionnaireViewModel(val completedUseCase: QuestionnaireCompletedUseCase) :
+    ViewModel() {
 
-    val answerToQuestion = mutableStateOf(0)
+    val headacheStartPeriod = mutableStateOf<HeadacheStartPeriod?>(null)
+    val returnToHomeScreen = mutableStateOf(-1)
 
-    fun onAnswerUpdated(answerId: Int) {
-        answerToQuestion.value = answerId
+    fun onAnswerUpdated(startPeriod: HeadacheStartPeriod) {
+        headacheStartPeriod.value = startPeriod
     }
 
     fun onQuestionnaireComplete() {
+        headacheStartPeriod.value?.apply {
+            viewModelScope.launch {
+                completedUseCase.saveNewHeadacheReport(this@apply)
+                navigateBackToHomeScreen()
+            }
+        }
+    }
 
+    private fun navigateBackToHomeScreen() {
+        returnToHomeScreen.value = Random.nextInt()
     }
 }
 
-enum class HeadacheStartTime {
-    AWAKE, DAY, EVENING
+class QuestionnaireCompletedUseCase(val headacheRepository: HeadacheRepository) {
+
+    suspend fun saveNewHeadacheReport(startPeriod: HeadacheStartPeriod) {
+        headacheRepository.storeHeadacheInfo(startPeriod)
+    }
 }

@@ -35,7 +35,9 @@ fun BaseAppNavigation() {
                 }
             }
             composable(headacheQuestionnaire) {
-                HeadacheQuestionnaire()
+                HeadacheQuestionnaire({
+                    navController.navigateUp()
+                })
             }
         }
     }
