@@ -10,6 +10,7 @@ interface HeadacheRepository {
 
     suspend fun storeHeadacheInfo(startPeriod: HeadacheStartPeriod)
     suspend fun getAllHeadacheData(): List<Headache>
+    suspend fun getAllHeadachesSinceStartOfDay(): List<Headache>
 }
 
 class HeadacheRepositoryImpl(
@@ -32,12 +33,21 @@ class HeadacheRepositoryImpl(
         database
             .headacheDao()
             .getAll()
-            .map {
-                Headache(
-                    dateRecorded = DateTime(it.dateRecorded),
-                    timeNoticed = HeadacheStartPeriod.valueOf(it.timeNoticed)
-                )
-            }
+            .mapToDataList()
+
+    override suspend fun getAllHeadachesSinceStartOfDay(): List<Headache> =
+        database
+            .headacheDao()
+            .getAllAfterTimestamp(dateTimeProvider.startOfCurrentDayInMillis())
+            .mapToDataList()
+
+    private fun List<HeadacheObject>.mapToDataList(): List<Headache> =
+        map {
+            Headache(
+                dateRecorded = DateTime(it.dateRecorded),
+                timeNoticed = HeadacheStartPeriod.forStartPeriod(it.timeNoticed)
+            )
+        }
 }
 
 data class Headache(

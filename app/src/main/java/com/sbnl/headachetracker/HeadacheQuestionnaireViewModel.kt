@@ -1,7 +1,6 @@
 package com.sbnl.headachetracker
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sbnl.headachetracker.database.HeadacheStartPeriod
@@ -9,8 +8,7 @@ import com.sbnl.headachetracker.repositories.HeadacheRepository
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class HeadacheQuestionnaireViewModel(val completedUseCase: QuestionnaireCompletedUseCase) :
-    ViewModel() {
+class HeadacheQuestionnaireViewModel(val completedUseCase: QuestionnaireCompletedUseCase) : ViewModel() {
 
     val headacheStartPeriod = mutableStateOf<HeadacheStartPeriod?>(null)
     val returnToHomeScreen = mutableStateOf(-1)

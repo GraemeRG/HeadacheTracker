@@ -9,5 +9,12 @@ data class HeadacheObject(
 )
 
 enum class HeadacheStartPeriod(val headachePeriod: String) {
-    WOKE_UP("Woke Up"), DURING_DAY("During Day"), DURING_EVENING("During Evening")
+    WOKE_UP("Woke Up"),
+    DURING_DAY("During Day"),
+    DURING_EVENING("During Evening");
+
+    companion object {
+        fun forStartPeriod(startPeriod: String) =
+            values().find { it.headachePeriod == startPeriod } ?: WOKE_UP
+    }
 }

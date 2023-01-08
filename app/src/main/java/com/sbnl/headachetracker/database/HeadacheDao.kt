@@ -9,6 +9,9 @@ interface HeadacheDao {
     @Query("SELECT * FROM headacheobject")
     suspend fun getAll(): List<HeadacheObject>
 
+    @Query("SELECT * FROM headacheobject WHERE dateRecorded > :timestamp")
+    suspend fun getAllAfterTimestamp(timestamp: Long): List<HeadacheObject>
+
     @Insert
     suspend fun insertAll(vararg headache: HeadacheObject)
 }

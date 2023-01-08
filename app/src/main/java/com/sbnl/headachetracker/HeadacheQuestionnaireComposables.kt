@@ -20,11 +20,8 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun HeadacheQuestionnaire(returnToHomeScreen: () -> Unit, viewModel: HeadacheQuestionnaireViewModel = getViewModel()) {
     val shouldReturnToHomeScreen = viewModel.returnToHomeScreen.value
-
-    if (shouldReturnToHomeScreen != null) {
-        if(shouldReturnToHomeScreen >= 0) {
-            returnToHomeScreen()
-        }
+    if(shouldReturnToHomeScreen >= 0) {
+        returnToHomeScreen()
     }
 
     WhenDidTheHeadacheStartQuestion(viewModel)

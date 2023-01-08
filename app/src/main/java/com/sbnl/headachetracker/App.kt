@@ -22,9 +22,11 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 module {
-                    viewModel { MainViewModel() }
+                    viewModel { HomeScreenViewModel(useCase = get()) }
 
                     viewModel { HeadacheQuestionnaireViewModel(completedUseCase = get()) }
+
+                    factory { HomeScreenDataUseCase(headacheRepo = get()) }
 
                     factory { QuestionnaireCompletedUseCase(headacheRepository = get()) }
 
