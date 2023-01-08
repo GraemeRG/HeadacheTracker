@@ -2,7 +2,9 @@ package com.sbnl.headachetracker
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.Button
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,22 +27,36 @@ fun WhenDidTheHeadacheStartQuestion(viewModel: HeadacheQuestionnaireViewModel) {
 
     Column(
         modifier = Modifier
-            .padding(horizontal = 32.dp, vertical = 48.dp)
+            .padding(start = 32.dp, end = 32.dp, top = 48.dp, bottom = 16.dp)
     ) {
-        Text(text = "When did the headache start?", style = Typography.h5)
-        VerticalSpacer(height = 32.dp)
-        RadioAnswer(
-            selected = answerState.value == 1,
-            answerText = "Woke up with it"
-        ) { viewModel.onAnswerUpdated(1) }
-        RadioAnswer(
-            selected = answerState.value == 2,
-            answerText = "During the day"
-        ) { viewModel.onAnswerUpdated(2) }
-        RadioAnswer(
-            selected = answerState.value == 3,
-            answerText = "In the evening"
-        ) { viewModel.onAnswerUpdated(3) }
+        LazyColumn(Modifier.weight(1f)) {
+            item { Text(text = "When did the headache start?", style = Typography.h5) }
+            item { VerticalSpacer(height = 32.dp) }
+            item {
+                RadioAnswer(
+                    selected = answerState.value == 1,
+                    answerText = "Woke up with it"
+                ) { viewModel.onAnswerUpdated(1) }
+            }
+            item {
+                RadioAnswer(
+                    selected = answerState.value == 2,
+                    answerText = "During the day"
+                ) { viewModel.onAnswerUpdated(2) }
+            }
+            item {
+                RadioAnswer(
+                    selected = answerState.value == 3,
+                    answerText = "In the evening"
+                ) { viewModel.onAnswerUpdated(3) }
+            }
+        }
+        Button(
+            modifier = Modifier.align(Alignment.End),
+            onClick = { viewModel.onQuestionnaireComplete() }
+        ) {
+            Text(text = "Submit Headache")
+        }
     }
 }
 
