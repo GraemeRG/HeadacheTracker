@@ -9,6 +9,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sbnl.headachetracker.features.HeadacheQuestionnaire
+import com.sbnl.headachetracker.features.homescreen.composables.HeadacheTrackerHomeScreen
 import com.sbnl.headachetracker.ui.theme.HeadacheTrackerTheme
 
 

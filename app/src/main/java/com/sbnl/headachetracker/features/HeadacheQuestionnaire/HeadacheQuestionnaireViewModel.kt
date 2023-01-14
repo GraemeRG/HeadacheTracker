@@ -1,4 +1,4 @@
-package com.sbnl.headachetracker
+package com.sbnl.headachetracker.features
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

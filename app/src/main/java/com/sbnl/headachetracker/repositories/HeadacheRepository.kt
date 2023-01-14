@@ -11,6 +11,7 @@ interface HeadacheRepository {
     suspend fun storeHeadacheInfo(startPeriod: HeadacheStartPeriod)
     suspend fun getAllHeadacheData(): List<Headache>
     suspend fun getAllHeadachesSinceStartOfDay(): List<Headache>
+    suspend fun updateHeadacheWithClearedTime(headacheId: Long, headacheClearTime: Long)
 }
 
 class HeadacheRepositoryImpl(
@@ -41,16 +42,24 @@ class HeadacheRepositoryImpl(
             .getAllAfterTimestamp(dateTimeProvider.startOfCurrentDayInMillis())
             .mapToDataList()
 
+    override suspend fun updateHeadacheWithClearedTime(headacheId: Long, headacheClearTime: Long) {
+        database
+            .headacheDao()
+            .addTimeClearedToHeadache(headacheId, headacheClearTime)
+    }
+
     private fun List<HeadacheObject>.mapToDataList(): List<Headache> =
         map {
             Headache(
                 dateRecorded = DateTime(it.dateRecorded),
-                timeNoticed = HeadacheStartPeriod.forStartPeriod(it.timeNoticed)
+                timeNoticed = HeadacheStartPeriod.forStartPeriod(it.timeNoticed),
+                timeCleared = it.timeCleared?.let { DateTime(it) }
             )
         }
 }
 
 data class Headache(
     val dateRecorded: DateTime,
-    val timeNoticed: HeadacheStartPeriod
+    val timeNoticed: HeadacheStartPeriod,
+    val timeCleared: DateTime? = null
 )

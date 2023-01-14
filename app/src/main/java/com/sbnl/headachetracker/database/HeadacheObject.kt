@@ -2,10 +2,11 @@ package com.sbnl.headachetracker.database
 
 import androidx.room.*
 
-@Entity
+@Entity(tableName = "headaches")
 data class HeadacheObject(
     @PrimaryKey val dateRecorded: Long, // TimeInMillisWhenRecorded
-    val timeNoticed: String
+    val timeNoticed: String,
+    val timeCleared: Long? = null
 )
 
 enum class HeadacheStartPeriod(val headachePeriod: String) {

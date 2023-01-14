@@ -3,6 +3,12 @@ package com.sbnl.headachetracker
 import android.app.Application
 import androidx.room.Room
 import com.sbnl.headachetracker.database.HeadacheDatabase
+import com.sbnl.headachetracker.features.HeadacheQuestionnaireViewModel
+import com.sbnl.headachetracker.features.homescreen.HomeScreenDataUseCase
+import com.sbnl.headachetracker.features.homescreen.HomeScreenViewModel
+import com.sbnl.headachetracker.features.QuestionnaireCompletedUseCase
+import com.sbnl.headachetracker.features.homescreen.ReportHeadacheClearedUseCase
+import com.sbnl.headachetracker.features.homescreen.ReportHeadacheGoneViewModel
 import com.sbnl.headachetracker.repositories.HeadacheRepository
 import com.sbnl.headachetracker.repositories.HeadacheRepositoryImpl
 import org.koin.android.ext.koin.androidContext
@@ -25,6 +31,10 @@ class App : Application() {
                     viewModel { HomeScreenViewModel(useCase = get()) }
 
                     viewModel { HeadacheQuestionnaireViewModel(completedUseCase = get()) }
+
+                    viewModel { ReportHeadacheGoneViewModel(useCase = get()) }
+
+                    factory { ReportHeadacheClearedUseCase(dateProvider = get(), headacheRepo = get()) }
 
                     factory { HomeScreenDataUseCase(headacheRepo = get()) }
 

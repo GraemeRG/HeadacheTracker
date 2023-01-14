@@ -1,4 +1,4 @@
-package com.sbnl.headachetracker
+package com.sbnl.headachetracker.features.homescreen.composables
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
@@ -14,12 +14,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sbnl.headachetracker.R
+import com.sbnl.headachetracker.features.homescreen.HomeScreenState
+import com.sbnl.headachetracker.features.homescreen.HomeScreenViewModel
+import com.sbnl.headachetracker.features.homescreen.RecordButtonConfiguration
+import com.sbnl.headachetracker.features.homescreen.ReportHeadacheGoneViewModel
 import com.sbnl.headachetracker.ui.theme.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun HeadacheTrackerHomeScreen(viewModel: HomeScreenViewModel = getViewModel(), onLaunchToHeadacheQuestionnaire: () -> Unit) {
-    val screenState = viewModel.screenState
+fun HeadacheTrackerHomeScreen(
+    homeScreenViewModel: HomeScreenViewModel = getViewModel(),
+    reportHeadacheClearedViewModel: ReportHeadacheGoneViewModel = getViewModel(),
+    onLaunchToHeadacheQuestionnaire: () -> Unit
+) {
+    val screenState = homeScreenViewModel.screenState
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -27,19 +36,11 @@ fun HeadacheTrackerHomeScreen(viewModel: HomeScreenViewModel = getViewModel(), o
     ) {
         when(val state = screenState.value) {
             is HomeScreenState.Content -> {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    LastSevenDays()
-                    when(state.recordButtonConfig) {
-                        RecordButtonConiguration.REPORT_NEW -> {
-                            RecordAHeadacheButton {
-                                onLaunchToHeadacheQuestionnaire()
-                            }
-                        }
-                        RecordButtonConiguration.REPORT_FINISHED -> {
-                            RecordHeadacheGoneButton {}
-                        }
-                    }
-                }
+                HomeScreenContent(
+                    state,
+                    onLaunchToHeadacheQuestionnaire,
+                    reportHeadacheClearedViewModel
+                )
             }
             HomeScreenState.Loading -> {
 
@@ -47,49 +48,29 @@ fun HeadacheTrackerHomeScreen(viewModel: HomeScreenViewModel = getViewModel(), o
         }
     }
 
-    viewModel.onEnterScreen()
+    homeScreenViewModel.onEnterScreen()
 }
 
 @Composable
-fun LastSevenDays() {
-    Column(
-        modifier = Modifier
-            .padding(start = 32.dp, end = 32.dp, top = 48.dp, bottom = 24.dp)
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colors.background,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            modifier = Modifier.padding(bottom = 8.dp),
-            text = "Your Last Seven Days",
-            style = Typography.subtitle1,
-            color = MaterialTheme.colors.onPrimary
-        )
-        Row(horizontalArrangement = Arrangement.SpaceAround) {
-            DayReportIcon(R.drawable.ic_mood_bad, PastelRed, "M")
-            DayReportIcon(R.drawable.ic_mood_good, PastelGreen, "T")
-            DayReportIcon(R.drawable.ic_mood_good, PastelGreen, "W")
-            DayReportIcon(R.drawable.ic_mood_bad, PastelRed, "T")
-            DayReportIcon(R.drawable.ic_mood_good, PastelGreen, "F")
-            DayReportIcon(R.drawable.ic_mood_bad, PastelRed, "S")
-            DayReportIcon(R.drawable.ic_mood_good, PastelGreen, "S")
-        }
-    }
-}
-
-@Composable
-private fun DayReportIcon(@DrawableRes icon: Int, iconColor: Color, dayText: String) {
+private fun HomeScreenContent(
+    state: HomeScreenState.Content,
+    onLaunchToHeadacheQuestionnaire: () -> Unit,
+    reportHeadacheClearedViewModel: ReportHeadacheGoneViewModel
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(
-            tint = iconColor,
-            painter = painterResource(id = icon),
-            contentDescription = null
-        )
-        Text(text = dayText, color = MaterialTheme.colors.onPrimary)
+        LastSevenDays()
+        when (val config = state.recordButtonConfig) {
+            is RecordButtonConfiguration.ReportNew -> {
+                RecordAHeadacheButton {
+                    onLaunchToHeadacheQuestionnaire()
+                }
+            }
+            is RecordButtonConfiguration.ReportFinished -> {
+                RecordHeadacheGoneButton {
+                    reportHeadacheClearedViewModel.reportHeadacheCleared(config.headacheId)
+                }
+            }
+        }
     }
 }
 
@@ -147,7 +128,7 @@ fun RecordHeadacheGoneButton(onClick: () -> Unit) {
 @Composable
 fun HomeScreenComposablesPreview() {
     HeadacheTrackerTheme {
-        HeadacheTrackerHomeScreen {
+        HeadacheTrackerHomeScreen() {
 
         }
     }

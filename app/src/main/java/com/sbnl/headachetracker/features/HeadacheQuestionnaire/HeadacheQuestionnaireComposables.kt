@@ -1,4 +1,4 @@
-package com.sbnl.headachetracker
+package com.sbnl.headachetracker.features
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
