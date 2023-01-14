@@ -112,7 +112,7 @@ fun RecordHeadacheGoneButton(onClick: () -> Unit) {
         size = 128.dp,
         onClick = { onClick() },
         backgroundColor = DesaturatedDarkBlue,
-        text = "Record Medication",
+        text = "Record head gone",
         iconRes = R.drawable.ic_bolt
     )
 }
