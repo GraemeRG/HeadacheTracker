@@ -12,7 +12,7 @@ val databaseModule = module {
                 androidApplication().applicationContext,
                 HeadacheDatabase::class.java,
                 "sbnl-headachetracker-db"
-            )
+            ).createFromAsset("database/prepop.db")
             .build()
     }
 }
