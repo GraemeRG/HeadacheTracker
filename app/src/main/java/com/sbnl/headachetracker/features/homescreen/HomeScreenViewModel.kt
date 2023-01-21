@@ -1,24 +1,25 @@
 package com.sbnl.headachetracker.features.homescreen
 
-import android.provider.ContactsContract.CommonDataKinds.Identity
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sbnl.headachetracker.features.homescreen.HomeScreenState.*
-import com.sbnl.headachetracker.features.homescreen.RecordButtonConfiguration.*
+import com.sbnl.headachetracker.features.homescreen.HomeScreenState.Content
+import com.sbnl.headachetracker.features.homescreen.HomeScreenState.Loading
+import com.sbnl.headachetracker.features.homescreen.RecordButtonConfiguration.ReportFinished
+import com.sbnl.headachetracker.features.homescreen.RecordButtonConfiguration.ReportNew
+import com.sbnl.headachetracker.core.CurrentHeadacheInfoLoadingUseCase
 import com.sbnl.headachetracker.repositories.Headache
-import com.sbnl.headachetracker.repositories.HeadacheRepository
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 
-class HomeScreenViewModel(private val useCase: HomeScreenDataUseCase) : ViewModel() {
+class HomeScreenViewModel(private val currentHeadacheInfoLoadingUseCase: CurrentHeadacheInfoLoadingUseCase) : ViewModel() {
 
     val screenState = mutableStateOf<HomeScreenState>(Loading)
 
     fun onEnterScreen() {
         viewModelScope.launch {
-            useCase
-                .hasReportedHeadacheToday()
+            currentHeadacheInfoLoadingUseCase
+                .getCurrentHeadache()
                 .apply {
                     screenState.value = Content(
                         recordButtonConfig = recordButtonConfiguration()
@@ -30,18 +31,6 @@ class HomeScreenViewModel(private val useCase: HomeScreenDataUseCase) : ViewMode
     private fun Headache?.recordButtonConfiguration() =
         if (this != null) ReportFinished(this.dateRecorded)
         else ReportNew
-}
-
-class HomeScreenDataUseCase(private val headacheRepo: HeadacheRepository) {
-
-    suspend fun hasReportedHeadacheToday(): Headache? =
-        headacheRepo
-            .getAllHeadachesSinceStartOfDay()
-            .lastOrNull()
-            ?.nullIfHeadacheHasCleared()
-
-    private fun Headache.nullIfHeadacheHasCleared(): Headache? =
-        if (timeCleared != null) null else this
 }
 
 sealed class HomeScreenState {

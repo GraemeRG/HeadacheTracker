@@ -9,8 +9,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sbnl.headachetracker.features.HeadacheQuestionnaire
+import com.sbnl.headachetracker.features.headachequestionnaire.HeadacheQuestionnaire
 import com.sbnl.headachetracker.features.homescreen.composables.HeadacheTrackerHomeScreen
+import com.sbnl.headachetracker.features.medicationquestionnaire.composables.MedicationQuestionnaire
 import com.sbnl.headachetracker.ui.theme.HeadacheTrackerTheme
 
 
@@ -32,12 +33,20 @@ fun BaseAppNavigation() {
         val navController = rememberNavController()
         NavHost(navController = navController, startDestination = homeScreen) {
             composable(homeScreen) {
-                HeadacheTrackerHomeScreen {
-                    navController.navigate(headacheQuestionnaire)
-                }
+                HeadacheTrackerHomeScreen(
+                    onLaunchToHeadacheQuestionnaire = { navController.navigate(headacheQuestionnaire) },
+                    onLaunchToMedicationTakenQuestionnaire = { navController.navigate(medicationQuestionnaire) }
+                )
             }
+
             composable(headacheQuestionnaire) {
                 HeadacheQuestionnaire({
+                    navController.navigateUp()
+                })
+            }
+
+            composable(medicationQuestionnaire) {
+                MedicationQuestionnaire({
                     navController.navigateUp()
                 })
             }

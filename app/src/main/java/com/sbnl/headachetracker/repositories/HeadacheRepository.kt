@@ -1,9 +1,10 @@
 package com.sbnl.headachetracker.repositories
 
+import com.google.gson.annotations.SerializedName
 import com.sbnl.headachetracker.DateTimeProvider
 import com.sbnl.headachetracker.database.HeadacheDatabase
-import com.sbnl.headachetracker.database.HeadacheObject
-import com.sbnl.headachetracker.database.HeadacheStartPeriod
+import com.sbnl.headachetracker.database.headache.HeadacheObject
+import com.sbnl.headachetracker.database.headache.HeadacheStartPeriod
 import org.joda.time.DateTime
 
 interface HeadacheRepository {
@@ -11,7 +12,13 @@ interface HeadacheRepository {
     suspend fun storeHeadacheInfo(startPeriod: HeadacheStartPeriod)
     suspend fun getAllHeadacheData(): List<Headache>
     suspend fun getAllHeadachesSinceStartOfDay(): List<Headache>
+    suspend fun getAllMedicationTakenForHeadache(headacheId: Long): List<RecordedMedication>
     suspend fun updateHeadacheWithClearedTime(headacheId: Long, headacheClearTime: Long)
+    suspend fun updateHeadacheWithMedication(
+        headacheId: Long,
+        medicationId: Long,
+        medicationTakenTime: Long
+    )
 }
 
 class HeadacheRepositoryImpl(
@@ -48,12 +55,36 @@ class HeadacheRepositoryImpl(
             .addTimeClearedToHeadache(headacheId, headacheClearTime)
     }
 
+    override suspend fun updateHeadacheWithMedication(
+        headacheId: Long,
+        medicationId: Long,
+        medicationTakenTime: Long
+    ) {
+        getAllMedicationTakenForHeadache(headacheId)
+            .toMutableList()
+            .apply { add(RecordedMedication(id = medicationId, timeTaken = medicationTakenTime)) }
+            .apply {
+                database
+                    .headacheDao()
+                    .updateHeadacheWithMedicationTaken(headacheId, this)
+            }
+
+    }
+
+    override suspend fun getAllMedicationTakenForHeadache(headacheId: Long): List<RecordedMedication> =
+        database
+            .headacheDao()
+            .getHeadacheWithDateRecorded(headacheId)
+            .lastOrNull()
+            ?.medicationTaken
+            ?: emptyList()
+
     private fun List<HeadacheObject>.mapToDataList(): List<Headache> =
-        map {
+        map { headache ->
             Headache(
-                dateRecorded = DateTime(it.dateRecorded),
-                timeNoticed = HeadacheStartPeriod.forStartPeriod(it.timeNoticed),
-                timeCleared = it.timeCleared?.let { DateTime(it) }
+                dateRecorded = DateTime(headache.dateRecorded),
+                timeNoticed = HeadacheStartPeriod.forStartPeriod(headache.timeNoticed),
+                timeCleared = headache.timeCleared?.let { DateTime(it) }
             )
         }
 }
@@ -61,5 +92,8 @@ class HeadacheRepositoryImpl(
 data class Headache(
     val dateRecorded: DateTime,
     val timeNoticed: HeadacheStartPeriod,
-    val timeCleared: DateTime? = null
+    val timeCleared: DateTime? = null,
+    val medicationRecorded: List<RecordedMedication> = emptyList()
 )
+
+data class RecordedMedication(@SerializedName("id") val id: Long, @SerializedName("timeTaken") val timeTaken: Long)
