@@ -1,8 +1,9 @@
-package com.sbnl.headachetracker.database
+package com.sbnl.headachetracker.database.headache
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.sbnl.headachetracker.repositories.RecordedMedication
 
 @Dao
 interface HeadacheDao {
@@ -17,6 +18,9 @@ interface HeadacheDao {
 
     @Query("UPDATE headaches SET timeCleared = :timeCleared WHERE dateRecorded =:id")
     suspend fun addTimeClearedToHeadache(id: Long, timeCleared: Long)
+
+    @Query("UPDATE headaches SET medicationTaken = :medicationTaken WHERE dateRecorded=:id")
+    suspend fun updateHeadacheWithMedicationTaken(id: Long, medicationTaken: List<RecordedMedication>)
 
     @Insert
     suspend fun insertAll(vararg headache: HeadacheObject)

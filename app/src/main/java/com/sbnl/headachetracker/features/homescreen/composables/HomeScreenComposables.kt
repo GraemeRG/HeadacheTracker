@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,7 +26,8 @@ import org.koin.androidx.compose.getViewModel
 fun HeadacheTrackerHomeScreen(
     homeScreenViewModel: HomeScreenViewModel = getViewModel(),
     reportHeadacheClearedViewModel: ReportHeadacheGoneViewModel = getViewModel(),
-    onLaunchToHeadacheQuestionnaire: () -> Unit
+    onLaunchToHeadacheQuestionnaire: () -> Unit,
+    onLaunchToMedicationTakenQuestionnaire: () -> Unit
 ) {
     val screenState = homeScreenViewModel.screenState
 
@@ -40,6 +40,7 @@ fun HeadacheTrackerHomeScreen(
                 HomeScreenContent(
                     state,
                     onLaunchToHeadacheQuestionnaire,
+                    onLaunchToMedicationTakenQuestionnaire,
                     reportHeadacheClearedViewModel
                 )
             }
@@ -56,6 +57,7 @@ fun HeadacheTrackerHomeScreen(
 private fun HomeScreenContent(
     state: Content,
     onLaunchToHeadacheQuestionnaire: () -> Unit,
+    onLaunchToMedicationTakenQuestionnaire: () -> Unit,
     reportHeadacheClearedViewModel: ReportHeadacheGoneViewModel
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -64,13 +66,17 @@ private fun HomeScreenContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            RecordMedicationButton { }
+            RecordMedicationButton {
+                onLaunchToMedicationTakenQuestionnaire()
+            }
             MainButton(
                 state.recordButtonConfig,
                 onLaunchToHeadacheQuestionnaire,
                 reportHeadacheClearedViewModel
             )
-            RecordMedicationButton { }
+            RecordMedicationButton {
+                onLaunchToMedicationTakenQuestionnaire()
+            }
         }
     }
 }

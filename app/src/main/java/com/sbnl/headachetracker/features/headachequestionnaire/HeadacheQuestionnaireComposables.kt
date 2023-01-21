@@ -1,19 +1,19 @@
-package com.sbnl.headachetracker.features
+package com.sbnl.headachetracker.features.headachequestionnaire
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.sbnl.headachetracker.database.HeadacheStartPeriod.*
+import com.sbnl.headachetracker.database.headache.HeadacheStartPeriod.*
+import com.sbnl.headachetracker.sharedcomposables.RadioAnswer
+import com.sbnl.headachetracker.sharedcomposables.VerticalSpacer
 import com.sbnl.headachetracker.ui.theme.Typography
 import org.koin.androidx.compose.getViewModel
 
@@ -70,32 +70,6 @@ fun WhenDidTheHeadacheStartQuestion(viewModel: HeadacheQuestionnaireViewModel) {
         ) {
             Text(text = "Submit Headache")
         }
-    }
-}
-
-@Composable
-private fun VerticalSpacer(height: Dp) {
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height)
-    )
-}
-
-@Composable
-fun RadioAnswer(selected: Boolean, answerText: String, onAnswerClicked: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .clickable { onAnswerClicked() }
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(selected = selected, onClick = onAnswerClicked)
-        Text(
-            text = answerText,
-            style = Typography.subtitle1,
-            color = MaterialTheme.colors.onPrimary
-        )
     }
 }
 

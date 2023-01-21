@@ -3,14 +3,11 @@ package com.sbnl.headachetracker
 import android.app.Application
 import androidx.room.Room
 import com.sbnl.headachetracker.database.HeadacheDatabase
-import com.sbnl.headachetracker.features.HeadacheQuestionnaireViewModel
-import com.sbnl.headachetracker.features.homescreen.HomeScreenDataUseCase
 import com.sbnl.headachetracker.features.homescreen.HomeScreenViewModel
-import com.sbnl.headachetracker.features.QuestionnaireCompletedUseCase
-import com.sbnl.headachetracker.features.homescreen.ReportHeadacheClearedUseCase
-import com.sbnl.headachetracker.features.homescreen.ReportHeadacheGoneViewModel
-import com.sbnl.headachetracker.repositories.HeadacheRepository
-import com.sbnl.headachetracker.repositories.HeadacheRepositoryImpl
+import com.sbnl.headachetracker.core.CurrentHeadacheInfoLoadingUseCase
+import com.sbnl.headachetracker.modules.reportHeadacheModule
+import com.sbnl.headachetracker.modules.reportMedicationModule
+import com.sbnl.headachetracker.modules.repositoriesModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -27,29 +24,26 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             modules(
+                reportHeadacheModule,
+                repositoriesModule,
+                reportMedicationModule,
                 module {
-                    viewModel { HomeScreenViewModel(useCase = get()) }
+                    viewModel { HomeScreenViewModel(currentHeadacheInfoLoadingUseCase = get()) }
 
-                    viewModel { HeadacheQuestionnaireViewModel(completedUseCase = get()) }
-
-                    viewModel { ReportHeadacheGoneViewModel(useCase = get()) }
-
-                    factory { ReportHeadacheClearedUseCase(dateProvider = get(), headacheRepo = get()) }
-
-                    factory { HomeScreenDataUseCase(headacheRepo = get()) }
-
-                    factory { QuestionnaireCompletedUseCase(headacheRepository = get()) }
-
-                    factory<HeadacheRepository> { HeadacheRepositoryImpl(database = get(), dateTimeProvider = get()) }
+                    factory {
+                        CurrentHeadacheInfoLoadingUseCase(headacheRepo = get())
+                    }
 
                     factory { DateTimeProvider() }
 
                     single {
-                        Room.databaseBuilder(
-                            applicationContext,
-                            HeadacheDatabase::class.java,
-                            "sbnl-headachetracker-db"
-                        ).build()
+                        Room
+                            .databaseBuilder(
+                                applicationContext,
+                                HeadacheDatabase::class.java,
+                                "sbnl-headachetracker-db"
+                            )
+                            .build()
                     }
                 }
             )
