@@ -10,7 +10,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sbnl.headachetracker.R
 import com.sbnl.headachetracker.features.medicationquestionnaire.CUSTOM_ANSWER_ID
 import com.sbnl.headachetracker.features.medicationquestionnaire.MedicationQuestionnaireViewModel
 import com.sbnl.headachetracker.sharedcomposables.RadioAnswer
@@ -30,7 +32,7 @@ fun MedicationTakenQuestion(viewModel: MedicationQuestionnaireViewModel) {
         LazyColumn(Modifier.weight(1f)) {
             item {
                 Text(
-                    text = "What type of medication did you take?",
+                    text = stringResource(id = R.string.mq_medication_type),
                     style = Typography.h5,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -52,7 +54,7 @@ fun MedicationTakenQuestion(viewModel: MedicationQuestionnaireViewModel) {
             modifier = Modifier.align(Alignment.End),
             onClick = { viewModel.onQuestionnaireComplete() }
         ) {
-            Text(text = "Submit Medication")
+            Text(text = stringResource(id = R.string.mq_submit))
         }
     }
 }

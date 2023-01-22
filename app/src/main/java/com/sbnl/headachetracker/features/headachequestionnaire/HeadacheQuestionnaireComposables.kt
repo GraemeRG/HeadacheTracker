@@ -9,8 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sbnl.headachetracker.R
 import com.sbnl.headachetracker.database.headache.HeadacheStartPeriod.*
 import com.sbnl.headachetracker.sharedcomposables.RadioAnswer
 import com.sbnl.headachetracker.sharedcomposables.VerticalSpacer
@@ -39,7 +41,7 @@ fun WhenDidTheHeadacheStartQuestion(viewModel: HeadacheQuestionnaireViewModel) {
         LazyColumn(Modifier.weight(1f)) {
             item {
                 Text(
-                    text = "When did the headache start?",
+                    text = stringResource(id = R.string.hq_question_start_period),
                     style = Typography.h5,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -48,19 +50,19 @@ fun WhenDidTheHeadacheStartQuestion(viewModel: HeadacheQuestionnaireViewModel) {
             item {
                 RadioAnswer(
                     selected = answerState.value == WOKE_UP,
-                    answerText = "Woke up with it"
+                    answerText = stringResource(id = R.string.hq_option_woke_up)
                 ) { viewModel.onAnswerUpdated(WOKE_UP) }
             }
             item {
                 RadioAnswer(
                     selected = answerState.value == DURING_DAY,
-                    answerText = "During the day"
+                    answerText = stringResource(id = R.string.hq_option_day)
                 ) { viewModel.onAnswerUpdated(DURING_DAY) }
             }
             item {
                 RadioAnswer(
                     selected = answerState.value == DURING_EVENING,
-                    answerText = "In the evening"
+                    answerText = stringResource(id = R.string.hq_option_evening)
                 ) { viewModel.onAnswerUpdated(DURING_EVENING) }
             }
         }
@@ -68,7 +70,7 @@ fun WhenDidTheHeadacheStartQuestion(viewModel: HeadacheQuestionnaireViewModel) {
             modifier = Modifier.align(Alignment.End),
             onClick = { viewModel.onQuestionnaireComplete() }
         ) {
-            Text(text = "Submit Headache")
+            Text(text = stringResource(id = R.string.hq_submit))
         }
     }
 }

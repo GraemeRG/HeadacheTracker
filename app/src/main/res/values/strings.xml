@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Headache Tracker</string>
+
+    <!-- Home Screen -->
+    <string name="button_headache">Record a headache</string>
+    <string name="button_headache_gone">Record headache gone</string>
+    <string name="button_medication">Record Medication</string>
+
+    <!-- Last Seven Days -->
+    <string name="last_seven_day_title">Your Last Seven Days</string>
+
+    <!-- Headache questionnaire -->
+    <string name="hq_question_start_period">When did the headache start?</string>
+    <string name="hq_option_woke_up">Woke up with it</string>
+    <string name="hq_option_day">During the day</string>
+    <string name="hq_option_evening">In the evening</string>
+    <string name="hq_submit">Submit Headache</string>
+
+    <!-- Medication questionnaire -->
+    <string name="mq_medication_type">What type of medication did you take?</string>
+    <string name="mq_submit">Submit Medication</string>
 </resources>

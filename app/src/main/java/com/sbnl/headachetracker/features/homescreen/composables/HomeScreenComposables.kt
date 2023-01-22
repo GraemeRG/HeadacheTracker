@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -107,7 +108,7 @@ fun RecordAHeadacheButton(onClick: () -> Unit) {
         size = 128.dp,
         onClick = { onClick() },
         backgroundColor = SoftRed,
-        text = "Record a headache",
+        text = stringResource(id = R.string.button_headache),
         iconRes = R.drawable.ic_skull
     )
 }
@@ -118,7 +119,7 @@ fun RecordHeadacheGoneButton(onClick: () -> Unit) {
         size = 128.dp,
         onClick = { onClick() },
         backgroundColor = DesaturatedDarkBlue,
-        text = "Record head gone",
+        text = stringResource(id = R.string.button_headache_gone),
         iconRes = R.drawable.ic_bolt
     )
 }
@@ -129,7 +130,7 @@ fun RecordMedicationButton(onClick: () -> Unit) {
         size = 120.dp,
         onClick = { onClick() },
         backgroundColor = GrayishBlue,
-        text = "Record Medication",
+        text = stringResource(id = R.string.button_medication),
         iconRes = R.drawable.ic_medication
     )
 }
@@ -169,7 +170,6 @@ fun NewRecordButton(
 @Composable
 fun HomeScreenComposablesPreview() {
     HeadacheTrackerTheme {
-        //HeadacheTrackerHomeScreen() { }
         Row(verticalAlignment = Alignment.CenterVertically) {
             RecordMedicationButton { }
             RecordAHeadacheButton { }
