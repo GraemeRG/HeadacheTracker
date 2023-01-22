@@ -1,11 +1,12 @@
 package com.sbnl.headachetracker.repositories
 
-import com.google.gson.annotations.SerializedName
 import com.sbnl.headachetracker.DateTimeProvider
 import com.sbnl.headachetracker.database.HeadacheDatabase
 import com.sbnl.headachetracker.database.headache.HeadacheObject
 import com.sbnl.headachetracker.database.headache.HeadacheStartPeriod
 import com.sbnl.headachetracker.features.headachequestionnaire.HeadacheReport
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
 import org.joda.time.DateTime
 
 interface HeadacheRepository {
@@ -14,6 +15,7 @@ interface HeadacheRepository {
     suspend fun storeHeadacheInfo(report: HeadacheReport)
     suspend fun getAllHeadacheData(): List<Headache>
     suspend fun getAllHeadachesSinceStartOfDay(): List<Headache>
+    suspend fun flowOfHeadachesSinceStartOfDay(): Flow<List<Headache>>
     suspend fun getAllMedicationTakenForHeadache(headacheId: Long): List<RecordedMedication>
     suspend fun updateHeadacheWithClearedTime(headacheId: Long, headacheClearTime: Long)
     suspend fun updateHeadacheWithMedication(
@@ -68,6 +70,12 @@ class HeadacheRepositoryImpl(
             .headacheDao()
             .getAllAfterTimestamp(dateTimeProvider.startOfCurrentDayInMillis())
             .mapToDataList()
+
+    override suspend fun flowOfHeadachesSinceStartOfDay(): Flow<List<Headache>> =
+        database
+            .headacheDao()
+            .flowAllHeadachesAfterTimestamp(dateTimeProvider.startOfCurrentDayInMillis())
+            .transform { headaches -> emit(headaches.mapToDataList()) }
 
     override suspend fun updateHeadacheWithClearedTime(headacheId: Long, headacheClearTime: Long) {
         database

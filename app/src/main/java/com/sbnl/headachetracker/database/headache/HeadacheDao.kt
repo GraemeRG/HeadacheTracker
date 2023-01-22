@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.sbnl.headachetracker.repositories.RecordedMedication
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HeadacheDao {
@@ -12,6 +13,9 @@ interface HeadacheDao {
 
     @Query("SELECT * FROM headaches WHERE dateRecorded > :timestamp")
     suspend fun getAllAfterTimestamp(timestamp: Long): List<HeadacheObject>
+
+    @Query("SELECT * FROM headaches WHERE dateRecorded > :timestamp")
+    fun flowAllHeadachesAfterTimestamp(timestamp: Long): Flow<List<HeadacheObject>>
 
     @Query("SELECT * FROM headaches WHERE dateRecorded=:dateRecorded")
     suspend fun getHeadacheWithDateRecorded(dateRecorded: Long): List<HeadacheObject>
