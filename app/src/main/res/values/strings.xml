@@ -16,6 +16,8 @@
     <string name="hq_option_evening">In the evening</string>
     <string name="hq_submit">Submit Headache</string>
 
+    <string name="hq_question_pain_level">How would you rate your current pain level?</string>
+
     <!-- Medication questionnaire -->
     <string name="mq_medication_type">What type of medication did you take?</string>
     <string name="mq_submit">Submit Medication</string>

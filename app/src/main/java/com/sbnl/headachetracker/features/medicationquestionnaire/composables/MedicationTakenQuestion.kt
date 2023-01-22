@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.sbnl.headachetracker.R
 import com.sbnl.headachetracker.features.medicationquestionnaire.CUSTOM_ANSWER_ID
 import com.sbnl.headachetracker.features.medicationquestionnaire.MedicationQuestionnaireViewModel
-import com.sbnl.headachetracker.sharedcomposables.RadioAnswer
-import com.sbnl.headachetracker.sharedcomposables.RadioEditEntry
-import com.sbnl.headachetracker.sharedcomposables.VerticalSpacer
+import com.sbnl.headachetracker.ui.sharedui.RadioAnswer
+import com.sbnl.headachetracker.ui.sharedui.RadioEditEntry
+import com.sbnl.headachetracker.ui.sharedui.VerticalSpacer
 import com.sbnl.headachetracker.ui.theme.Typography
 
 @Composable
