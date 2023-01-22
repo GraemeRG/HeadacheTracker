@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sbnl.headachetracker.R
 import com.sbnl.headachetracker.features.headachequestionnaire.HeadacheQuestionnaireViewModel
+import com.sbnl.headachetracker.ui.sharedui.VerticalSpacer
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -28,6 +29,8 @@ fun HeadacheQuestionnaire(returnToHomeScreen: () -> Unit, viewModel: HeadacheQue
     ) {
         LazyColumn(Modifier.weight(1f)) {
             item { WhenDidTheHeadacheStartQuestion(viewModel = viewModel) }
+            item { VerticalSpacer(height = 16.dp) }
+            item { InitialPainLevelQuestion(viewModel = viewModel) }
         }
         Button(
             modifier = Modifier.align(Alignment.End),

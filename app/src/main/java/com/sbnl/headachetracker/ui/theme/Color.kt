@@ -28,3 +28,10 @@ val PaleOrange = Color(0xFFFFCBB5)
 val PastelWhite = Color(0xFFFAF8F6)
 val LightGrayishYellow = Color(0xFFF4F2F0)
 val LightGrayishOrange = Color(0xFFFCFAF7)
+
+// Pain Level
+val MildGreen = Color(0xFF9CBE4C)
+val ModerateYellow = Color(0xFFF2F255)
+val SevereOrange = Color(0xFFE9B440)
+val VerySevereOrange = Color(0xFFE3782E)
+val WorstPainRed = Color(0xFFC0281C)
