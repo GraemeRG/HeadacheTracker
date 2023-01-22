@@ -5,11 +5,13 @@ import com.sbnl.headachetracker.DateTimeProvider
 import com.sbnl.headachetracker.database.HeadacheDatabase
 import com.sbnl.headachetracker.database.headache.HeadacheObject
 import com.sbnl.headachetracker.database.headache.HeadacheStartPeriod
+import com.sbnl.headachetracker.features.headachequestionnaire.HeadacheReport
 import org.joda.time.DateTime
 
 interface HeadacheRepository {
 
     suspend fun storeHeadacheInfo(startPeriod: HeadacheStartPeriod)
+    suspend fun storeHeadacheInfo(report: HeadacheReport)
     suspend fun getAllHeadacheData(): List<Headache>
     suspend fun getAllHeadachesSinceStartOfDay(): List<Headache>
     suspend fun getAllMedicationTakenForHeadache(headacheId: Long): List<RecordedMedication>
@@ -33,6 +35,24 @@ class HeadacheRepositoryImpl(
                 HeadacheObject(
                     dateRecorded = dateTimeProvider.nowUtcInMillis(),
                     timeNoticed = startPeriod.headachePeriod
+                )
+            )
+    }
+
+    override suspend fun storeHeadacheInfo(report: HeadacheReport) {
+        val recordedTime = dateTimeProvider.nowUtcInMillis()
+        database
+            .headacheDao()
+            .insertAll(
+                HeadacheObject(
+                    dateRecorded = recordedTime,
+                    timeNoticed = report.startPeriod.headachePeriod,
+                    monitoredPainLevel = listOf(
+                        PainLevelOverHeadache(
+                            report.initialPainLevel,
+                            recordedTime
+                        )
+                    )
                 )
             )
     }
@@ -96,4 +116,12 @@ data class Headache(
     val medicationRecorded: List<RecordedMedication> = emptyList()
 )
 
-data class RecordedMedication(@SerializedName("id") val id: Long, @SerializedName("timeTaken") val timeTaken: Long)
+data class RecordedMedication(
+    val id: Long,
+    val timeTaken: Long
+)
+
+data class PainLevelOverHeadache(
+    val painLevel: Int,
+    val timeRecorded: Long
+)

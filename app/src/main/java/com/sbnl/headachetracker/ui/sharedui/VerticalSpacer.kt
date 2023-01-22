@@ -1,4 +1,4 @@
-package com.sbnl.headachetracker.sharedcomposables
+package com.sbnl.headachetracker.ui.sharedui
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
