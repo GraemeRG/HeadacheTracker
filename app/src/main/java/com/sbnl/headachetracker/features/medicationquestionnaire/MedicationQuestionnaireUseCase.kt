@@ -1,6 +1,6 @@
 package com.sbnl.headachetracker.features.medicationquestionnaire
 
-import com.sbnl.headachetracker.DateTimeProvider
+import com.sbnl.headachetracker.utils.datetime.DateTimeProvider
 import com.sbnl.headachetracker.repositories.HeadacheRepository
 import com.sbnl.headachetracker.repositories.Medication
 import com.sbnl.headachetracker.repositories.MedicationRepository
