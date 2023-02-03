@@ -2,7 +2,7 @@ package com.sbnl.headachetracker.features.homescreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sbnl.headachetracker.DateTimeProvider
+import com.sbnl.headachetracker.utils.datetime.DateTimeProvider
 import com.sbnl.headachetracker.repositories.HeadacheRepository
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime

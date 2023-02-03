@@ -79,6 +79,7 @@ private fun HomeScreenContent(
                 onLaunchToMedicationTakenQuestionnaire()
             }
         }
+        CurrentMoodIndicator(state.currentPainLevel)
     }
 }
 

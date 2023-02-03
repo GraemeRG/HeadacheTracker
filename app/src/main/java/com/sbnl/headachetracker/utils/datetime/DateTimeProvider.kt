@@ -1,4 +1,4 @@
-package com.sbnl.headachetracker
+package com.sbnl.headachetracker.utils.datetime
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone

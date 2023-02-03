@@ -1,6 +1,6 @@
 package com.sbnl.headachetracker.repositories
 
-import com.sbnl.headachetracker.DateTimeProvider
+import com.sbnl.headachetracker.utils.datetime.DateTimeProvider
 import com.sbnl.headachetracker.database.HeadacheDatabase
 import com.sbnl.headachetracker.database.headache.HeadacheObject
 import com.sbnl.headachetracker.database.headache.HeadacheStartPeriod
@@ -112,7 +112,8 @@ class HeadacheRepositoryImpl(
             Headache(
                 dateRecorded = DateTime(headache.dateRecorded),
                 timeNoticed = HeadacheStartPeriod.forStartPeriod(headache.timeNoticed),
-                timeCleared = headache.timeCleared?.let { DateTime(it) }
+                timeCleared = headache.timeCleared?.let { DateTime(it) },
+                painLevelOverTime = headache.monitoredPainLevel.map { PainLevelOverHeadache(it.painLevel, it.timeRecorded) }
             )
         }
 }
@@ -121,7 +122,8 @@ data class Headache(
     val dateRecorded: DateTime,
     val timeNoticed: HeadacheStartPeriod,
     val timeCleared: DateTime? = null,
-    val medicationRecorded: List<RecordedMedication> = emptyList()
+    val medicationRecorded: List<RecordedMedication> = emptyList(),
+    val painLevelOverTime: List<PainLevelOverHeadache> = emptyList()
 )
 
 data class RecordedMedication(
