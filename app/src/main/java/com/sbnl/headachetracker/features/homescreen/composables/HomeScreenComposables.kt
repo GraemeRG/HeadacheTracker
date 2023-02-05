@@ -16,10 +16,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sbnl.headachetracker.R
-import com.sbnl.headachetracker.features.homescreen.HomeScreenState.*
+import com.sbnl.headachetracker.features.homescreen.HomeScreenState.Content
+import com.sbnl.headachetracker.features.homescreen.HomeScreenState.Loading
 import com.sbnl.headachetracker.features.homescreen.HomeScreenViewModel
 import com.sbnl.headachetracker.features.homescreen.RecordButtonConfiguration
 import com.sbnl.headachetracker.features.homescreen.ReportHeadacheGoneViewModel
+import com.sbnl.headachetracker.features.homescreen.UpdatePainLevelViewModel
 import com.sbnl.headachetracker.ui.theme.*
 import org.koin.androidx.compose.getViewModel
 
@@ -27,6 +29,7 @@ import org.koin.androidx.compose.getViewModel
 fun HeadacheTrackerHomeScreen(
     homeScreenViewModel: HomeScreenViewModel = getViewModel(),
     reportHeadacheClearedViewModel: ReportHeadacheGoneViewModel = getViewModel(),
+    updatePainLevelViewModel: UpdatePainLevelViewModel = getViewModel(),
     onLaunchToHeadacheQuestionnaire: () -> Unit,
     onLaunchToMedicationTakenQuestionnaire: () -> Unit
 ) {
@@ -42,13 +45,21 @@ fun HeadacheTrackerHomeScreen(
                     state,
                     onLaunchToHeadacheQuestionnaire,
                     onLaunchToMedicationTakenQuestionnaire,
-                    reportHeadacheClearedViewModel
+                    reportHeadacheClearedViewModel,
+                    updatePainLevelViewModel
                 )
             }
             Loading -> {
 
             }
         }
+    }
+
+    if(updatePainLevelViewModel.displayUpdatePainLevel.value) {
+        UpdatePainLevelDialog(
+            onDismissRequest = { updatePainLevelViewModel.onDialogDismissed() },
+            onConfirmClicked = { newLevel -> updatePainLevelViewModel.onPainLevelUpdated(newLevel) }
+        )
     }
 
     homeScreenViewModel.onEnterScreen()
@@ -59,7 +70,8 @@ private fun HomeScreenContent(
     state: Content,
     onLaunchToHeadacheQuestionnaire: () -> Unit,
     onLaunchToMedicationTakenQuestionnaire: () -> Unit,
-    reportHeadacheClearedViewModel: ReportHeadacheGoneViewModel
+    reportHeadacheClearedViewModel: ReportHeadacheGoneViewModel,
+    updatePainLevelViewModel: UpdatePainLevelViewModel
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         LastSevenDays()
@@ -79,7 +91,7 @@ private fun HomeScreenContent(
                 onLaunchToMedicationTakenQuestionnaire()
             }
         }
-        CurrentMoodIndicator(state.currentPainLevel)
+        CurrentMoodIndicator(state.currentPainLevel) { updatePainLevelViewModel.onUpdatePainLevelTapped() }
     }
 }
 
