@@ -4,6 +4,8 @@ import com.sbnl.headachetracker.features.headachequestionnaire.HeadacheQuestionn
 import com.sbnl.headachetracker.features.headachequestionnaire.HeadacheQuestionnaireViewModel
 import com.sbnl.headachetracker.features.homescreen.ReportHeadacheClearedUseCase
 import com.sbnl.headachetracker.features.homescreen.ReportHeadacheGoneViewModel
+import com.sbnl.headachetracker.features.homescreen.UpdatePainLevelUseCase
+import com.sbnl.headachetracker.features.homescreen.UpdatePainLevelViewModel
 import com.sbnl.headachetracker.repositories.HeadacheRepository
 import com.sbnl.headachetracker.repositories.HeadacheRepositoryImpl
 import com.sbnl.headachetracker.repositories.MedicationRepository
@@ -25,5 +27,12 @@ val reportHeadacheModule = module {
             dateProvider = get(),
             headacheRepo = get()
         )
+    }
+
+    //-- Update Pain Level, stick in own module? --
+    viewModel { UpdatePainLevelViewModel(updatePainLevelUseCase = get()) }
+
+    factory {
+        UpdatePainLevelUseCase(currentHeadache = get(), headacheRepo = get())
     }
 }

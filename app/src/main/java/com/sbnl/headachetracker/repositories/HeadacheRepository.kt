@@ -23,6 +23,8 @@ interface HeadacheRepository {
         medicationId: Long,
         medicationTakenTime: Long
     )
+
+    suspend fun updatePainLevelForHeadache(headacheId: Long, newLevel: Int)
 }
 
 class HeadacheRepositoryImpl(
@@ -100,12 +102,24 @@ class HeadacheRepositoryImpl(
     }
 
     override suspend fun getAllMedicationTakenForHeadache(headacheId: Long): List<RecordedMedication> =
-        database
-            .headacheDao()
-            .getHeadacheWithDateRecorded(headacheId)
-            .lastOrNull()
+        getHeadacheWithId(headacheId)
             ?.medicationTaken
             ?: emptyList()
+
+    override suspend fun updatePainLevelForHeadache(headacheId: Long, newLevel: Int) {
+        getHeadacheWithId(headacheId)
+            ?.addNewPainLevel(newLevel)
+            ?.apply {
+                database
+                    .headacheDao()
+                    .updateHeadacheWithPainLevel(headacheId, this)
+            }
+    }
+
+    private suspend fun getHeadacheWithId(headacheId: Long) = database
+        .headacheDao()
+        .getHeadacheWithDateRecorded(headacheId)
+        .lastOrNull()
 
     private fun List<HeadacheObject>.mapToDataList(): List<Headache> =
         map { headache ->
@@ -113,9 +127,22 @@ class HeadacheRepositoryImpl(
                 dateRecorded = DateTime(headache.dateRecorded),
                 timeNoticed = HeadacheStartPeriod.forStartPeriod(headache.timeNoticed),
                 timeCleared = headache.timeCleared?.let { DateTime(it) },
-                painLevelOverTime = headache.monitoredPainLevel.map { PainLevelOverHeadache(it.painLevel, it.timeRecorded) }
+                painLevelOverTime = headache.monitoredPainLevel.map {
+                    PainLevelOverHeadache(
+                        it.painLevel,
+                        it.timeRecorded
+                    )
+                }
             )
         }
+
+    private fun HeadacheObject.addNewPainLevel(newLevel: Int): List<PainLevelOverHeadache> = this
+        .monitoredPainLevel
+        .toMutableList()
+        .apply {
+            add(PainLevelOverHeadache(newLevel, dateTimeProvider.nowUtcInMillis()))
+        }
+        .toList()
 }
 
 data class Headache(
